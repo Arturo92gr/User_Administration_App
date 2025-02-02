@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
@@ -16,13 +17,13 @@ class ProfileController extends Controller
     public function show(Request $request)
     {
         $view = $request->route()->getName() === 'profile.password' ? 'profile.password' : 'profile.edit';
-        return view($view, ['user' => auth()->user()]);
+        return view($view, ['user' => Auth::user()]);
     }
 
     /*  Edición de nombre y correo V1 */
     public function updateProfile(Request $request)
     {
-        $user = auth()->user();
+        $user = Auth::user();
         
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -71,7 +72,7 @@ class ProfileController extends Controller
             'password' => ['required', 'confirmed', 'min:8'],
         ]);
 
-        $user = auth()->user();
+        $user = Auth::user();
         $user->update([
             'password' => Hash::make($validated['password'])
         ]);
