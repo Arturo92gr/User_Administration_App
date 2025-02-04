@@ -2,7 +2,7 @@
 
 git clone https://github.com/rtro-dev/User_Administration_App.git
 
-sudo chown -R user:www-data User_Administration_App/
+sudo chown -R user:www-data User_Administration_App/  
 sudo chmod -R 775 User_Administration_App/
 
 cd userApp/

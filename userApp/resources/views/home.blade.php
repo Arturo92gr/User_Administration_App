@@ -9,9 +9,9 @@
 
                 <div class="card-body">
                     @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
+                    <div class="alert alert-success" role="alert">
+                        {{ session('status') }}
+                    </div>
                     @endif
 
                     {{ __('You are logged in!') }}
@@ -19,6 +19,11 @@
                     <div class="mt-4">
                         <h5>Profile Management</h5>
                         <ul class="list-unstyled">
+                            <li class="mb-2">
+                                <a href="{{ route('profile.manage') }}" class="btn btn-success">
+                                    {{ __('Manage Profile') }}
+                                </a>
+                            </li>
                             <li class="mb-2">
                                 <a href="{{ route('profile.show') }}" class="btn btn-primary">
                                     {{ __('Edit Profile') }}

@@ -43,28 +43,6 @@ class ProfileController extends Controller
         return back()->with('status', 'Profile updated successfully!');
     }
 
-    /*  Edición de nombre y correo V2 */
-    /* function update(Request $request) {
-        $validator = Validator::make($request->all(), [
-            'name' => ['required', 'string', 'max:255', 'min:3'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $request->user()->id],
-        ]);
-        if($validator->fails()) {
-            return back()->withInput()->withErrors($validator->getMessageBag());
-        }
-        $user = $request->user();
-        try {
-            if($request->email != $user->email) {
-                $user->email_verified_at = null;
-            }
-            $user->update($request->all());
-            return redirect('home/profile')->with(['message' => 'User edited.']);
-        } catch(\Exception $e) {
-            return redirect('home/profile')->with(['message' => 'User not edited.']);
-        }
-    } */
-
-    /*  Edición de password V1 */
     public function updatePassword(Request $request)
     {
         $validated = $request->validate([
@@ -80,21 +58,48 @@ class ProfileController extends Controller
         return back()->with('status', 'Password changed successfully!');
     }
 
-    /*  Edición de password V2 */
-    /* function password(Request $request) {
-        $validator = Validator::make($request->all(), [
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
-        if($validator->fails()) {
-            return back()->withErrors($validator->getMessageBag());
+    public function manage(Request $request)
+    {
+        if ($request->isMethod('put')) {
+            $user = Auth::user();
+
+            $validated = $request->validate([
+                'name' => ['nullable', 'string', 'max:255'],
+                'email' => ['nullable', 'email', Rule::unique('users')->ignore($user->id)],
+                'current_password' => ['nullable', 'current_password'],
+                'password' => ['nullable', 'confirmed', 'min:8'],
+            ]);
+
+            $updateData = [];
+            $messages = [];
+
+            if (!empty($validated['name']) && $validated['name'] !== $user->name) {
+                $updateData['name'] = $validated['name'];
+                $messages[] = 'Name updated successfully';
+            }
+
+            if (!empty($validated['email']) && $validated['email'] !== $user->email) {
+                $updateData['email'] = $validated['email'];
+                $updateData['email_verified_at'] = null; // Reset verification
+                $user->sendEmailVerificationNotification(); // Send new verification email
+                $messages[] = 'Email updated successfully';
+            }
+
+            if (!empty($validated['password'])) {
+                $updateData['password'] = Hash::make($validated['password']);
+                $messages[] = 'Password updated successfully';
+            }
+
+            if (!empty($updateData)) {
+                $user->update($updateData);
+                $statusMessage = count($messages) > 1 ? 'Profile updated successfully!' : $messages[0];
+                return redirect()->route('home')->with('status', $statusMessage);
+            }
+
+            return redirect()->route('home')->with('status', 'No changes were made.');
         }
-        $oldpassword = $request->oldpassword;
-        $user = $request->user();
-        if (password_verify($oldpassword, $user->password)) {
-            $user->password = Hash::make($request->password);
-            $user->save();
-            return redirect('home/profile')->with(['message' => 'User password changed.']);
-        }
-        return redirect('home/profile')->with(['message' => 'User password not edited because old password is not correct.']);
-    } */
+
+        return view('profile.manage', ['user' => Auth::user()]);
+    }
+
 }
