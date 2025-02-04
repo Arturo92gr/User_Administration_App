@@ -66,33 +66,62 @@ class ProfileController extends Controller
             $validated = $request->validate([
                 'name' => ['nullable', 'string', 'max:255'],
                 'email' => ['nullable', 'email', Rule::unique('users')->ignore($user->id)],
-                'current_password' => ['nullable', 'current_password'],
                 'password' => ['nullable', 'confirmed', 'min:8'],
             ]);
+
+            if ($request->filled('email') || $request->filled('password')) {
+                $request->validate([
+                    'current_password' => ['required', 'current_password'],
+                ]);
+            }
+
+            if ($request->filled('password') && !$request->filled('password_confirmation')) {
+                return back()->withErrors(['password_confirmation' => 'You must confirm the new password.'])->withInput();
+            }
 
             $updateData = [];
             $messages = [];
 
+            $nameUpdated = false;
+            $emailUpdated = false;
+            $passwordUpdated = false;
+
             if (!empty($validated['name']) && $validated['name'] !== $user->name) {
                 $updateData['name'] = $validated['name'];
-                $messages[] = 'Name updated successfully';
+                $nameUpdated = true;
             }
 
             if (!empty($validated['email']) && $validated['email'] !== $user->email) {
                 $updateData['email'] = $validated['email'];
                 $updateData['email_verified_at'] = null; // Reset verification
                 $user->sendEmailVerificationNotification(); // Send new verification email
-                $messages[] = 'Email updated successfully';
+                $emailUpdated = true;
             }
 
             if (!empty($validated['password'])) {
                 $updateData['password'] = Hash::make($validated['password']);
-                $messages[] = 'Password updated successfully';
+                $passwordUpdated = true;
             }
 
             if (!empty($updateData)) {
                 $user->update($updateData);
-                $statusMessage = count($messages) > 1 ? 'Profile updated successfully!' : $messages[0];
+
+                if ($nameUpdated && $emailUpdated && $passwordUpdated) {
+                    $statusMessage = 'Profile updated successfully';
+                } elseif ($nameUpdated && $emailUpdated) {
+                    $statusMessage = 'Profile updated successfully';
+                } elseif ($nameUpdated && $passwordUpdated) {
+                    $statusMessage = 'Profile updated successfully';
+                } elseif ($emailUpdated && $passwordUpdated) {
+                    $statusMessage = 'Profile updated successfully';
+                } elseif ($nameUpdated) {
+                    $statusMessage = 'Name updated successfully';
+                } elseif ($emailUpdated) {
+                    $statusMessage = 'Email updated successfully';
+                } elseif ($passwordUpdated) {
+                    $statusMessage = 'Password updated successfully';
+                }
+
                 return redirect()->route('home')->with('status', $statusMessage);
             }
 

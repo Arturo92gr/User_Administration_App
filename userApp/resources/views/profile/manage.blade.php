@@ -1,3 +1,4 @@
+
 @extends('layouts.app')
 
 @section('content')
@@ -23,6 +24,8 @@
                             @enderror
                         </div>
 
+                        <br>
+
                         <div class="form-group">
                             <label for="email">{{ __('Email Address') }}</label>
                             <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email', Auth::user()->email) }}" autocomplete="email">
@@ -33,15 +36,7 @@
                             @enderror
                         </div>
 
-                        <div class="form-group">
-                            <label for="current_password">{{ __('Current Password') }}</label>
-                            <input id="current_password" type="password" class="form-control @error('current_password') is-invalid @enderror" name="current_password" autocomplete="current-password">
-                            @error('current_password')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                            @enderror
-                        </div>
+                        <br>
 
                         <div class="form-group">
                             <label for="password">{{ __('New Password') }}</label>
@@ -55,17 +50,38 @@
 
                         <div class="form-group">
                             <label for="password-confirm">{{ __('Confirm New Password') }}</label>
-                            <input id="password-confirm" type="password" class="form-control" name="password_confirmation" autocomplete="new-password">
+                            <input id="password-confirm" type="password" class="form-control @error('password_confirmation') is-invalid @enderror" name="password_confirmation" autocomplete="new-password">
+                            @error('password_confirmation')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                         </div>
 
                         <br>
 
-                        <div class="form-group mb-0">
-                            <button type="submit" class="btn btn-primary">
-                                {{ __('Update Profile') }}
-                            </button>
+                        <div class="form-group row">
+                            <div class="col-auto align-self-end">
+                                <button type="submit" class="btn btn-primary">
+                                    {{ __('Update Profile') }}
+                                </button>
+                            </div>
+                            <div class="col">
+                                <label for="current_password">{{ __('Current Password') }}</label>
+                                <input id="current_password" type="password" class="form-control @error('current_password') is-invalid @enderror" name="current_password" placeholder="*Required field" autocomplete="current-password">
+                                @error('current_password')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
                         </div>
                     </form>
+                    <div class="form-group mt-3">
+                        <a href="{{ route('home') }}" class="btn btn-secondary">
+                            {{ __('Back') }}
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

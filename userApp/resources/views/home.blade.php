@@ -20,12 +20,12 @@
                         <h5>Profile Management</h5>
                         <ul class="list-unstyled">
                             <li class="mb-2">
-                                <a href="{{ route('profile.manage') }}" class="btn btn-success">
+                                <a href="{{ route('profile.manage') }}" class="btn btn-primary">
                                     {{ __('Manage Profile') }}
                                 </a>
                             </li>
                             <li class="mb-2">
-                                <a href="{{ route('profile.show') }}" class="btn btn-primary">
+                                <a href="{{ route('profile.show') }}" class="btn btn-secondary">
                                     {{ __('Edit Profile') }}
                                 </a>
                             </li>
