@@ -38,4 +38,15 @@ class HomeController extends Controller
     {
         return view('verificado');
     }
+
+    public function redirectBasedOnRole()
+    {
+        if (auth()->user()->role === 'superadmin') {
+            return redirect()->route('superadmin.index');
+        } elseif (auth()->user()->role === 'admin') {
+            return redirect()->route('admin.index');
+        } else {
+            return redirect()->route('home');
+        }
+    }
 }

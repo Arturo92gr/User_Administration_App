@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -36,5 +38,16 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
         $this->middleware('auth')->only('logout');
+    }
+
+    protected function authenticated(Request $request, $user)
+    {
+        if ($user->hasRole('superadmin')) {
+            return redirect()->route('superadmin.index');
+        } elseif ($user->hasRole('admin')) {
+            return redirect()->route('admin.index');
+        } else {
+            return redirect()->route('home');
+        }
     }
 }

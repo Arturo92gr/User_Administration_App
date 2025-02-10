@@ -14,28 +14,28 @@
                     </div>
                     @endif
 
-                    {{ __('You are logged in!') }}
+                    {{ __('You are logged in') }}
+
+                    <div class="mt-4">
+                        <a href="{{ route('verificado') }}">Verified email status</a>
+                    </div>
 
                     <div class="mt-4">
                         <h5>Profile Management</h5>
+                        <br>
                         <ul class="list-unstyled">
                             <li class="mb-2">
                                 <a href="{{ route('profile.manage') }}" class="btn btn-primary">
-                                    {{ __('Manage Profile') }}
-                                </a>
-                            </li>
-                            <li class="mb-2">
-                                <a href="{{ route('profile.show') }}" class="btn btn-secondary">
                                     {{ __('Edit Profile') }}
                                 </a>
                             </li>
-                            <li>
-                                <a href="{{ route('profile.password') }}" class="btn btn-secondary">
-                                    {{ __('Change Password') }}
-                                </a>
-                            </li>
                         </ul>
-                    </div>
+                        <div class="form-group mt-3">
+                            <a href="{{ route('index') }}" class="btn btn-secondary">
+                                {{ __('Back') }}
+                            </a>
+                        </div>
+                    </div>        
                 </div>
             </div>
         </div>

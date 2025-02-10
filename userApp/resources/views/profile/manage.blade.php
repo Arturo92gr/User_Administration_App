@@ -10,7 +10,7 @@
 
                 <div class="card-body">
                     <!-- Manage Profile Form -->
-                    <form method="POST" action="{{ route('profile.manage.update') }}">
+                    <form method="POST" action="{{ route('profile.update') }}">
                         @csrf
                         @method('PUT')
 

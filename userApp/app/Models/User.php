@@ -47,11 +47,16 @@ class User extends Authenticatable implements MustVerifyEmail
         ];
     }
 
-    /* function isAdmin() {
+    function isAdmin() {
         return $this->role === 'admin';
     }
     
     function isSuperAdmin() {
         return $this->id == 1 && $this->role === 'superadmin';
-    } */
+    }
+
+    public function hasRole($role)
+    {
+        return $this->role === $role; // para la columna rol de la tabla de usuarios
+    }
 }
